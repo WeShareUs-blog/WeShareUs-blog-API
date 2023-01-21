@@ -1,0 +1,64 @@
+# workflow name
+name: "CI/CD"
+
+# main 브랜치는 해당 workflow에서 제외
+on: push
+
+jobs:
+  CI:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        node-version: [16.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test
+
+  CD:
+    if: ${{ github.ref == 'main'}}
+    runs-on: ubuntu-18.04
+    need: CI
+    steps:
+      - name: checkout branch
+        uses: actions/checkout@v3
+
+      - name: setup docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: build docker image
+        run: | 
+          docker build --build-arg \
+          MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
+          MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }} \
+          MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD}}  \
+          MYSQL_PORT=${{ secrets.MYSQL_PORT}} \
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/WeShareUs-blog-API:latest .
+
+      - name: login docker hub
+        run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: push docker image
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/WeShareUs-blog-API:latest
+
+      - name: SSH remote and Run Docker container
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_SERVER }}
+          username: ${{ secrets.SSH_SERVER_USERNAME }}
+          key: ${{ secrets.SSH_CLIENT_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+              docker pull ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-back:latest
+              docker stop weshareus-back
+              docker rm weshareus-back
+              docker run --restart=unless-stopped --add-host=host.docker.internal:host-gateway -d -p 8080:8080 --name weshareus-back ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-back:latest
+              docker rmi $(docker images -f "dangling=true" -q)
