@@ -6,7 +6,7 @@ on: push
 
 jobs:
   CI:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         node-version: [16.x]
@@ -26,7 +26,7 @@ jobs:
   CD:
     needs: CI
     if: ${{ github.ref == 'main'}}
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: checkout branch
         uses: actions/checkout@v3
@@ -57,8 +57,8 @@ jobs:
           key: ${{ secrets.SSH_CLIENT_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-              docker pull ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-back:latest
-              docker stop weshareus-back
-              docker rm weshareus-back
-              docker run --restart=unless-stopped --add-host=host.docker.internal:host-gateway -d -p 8080:8080 --name weshareus-back ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-back:latest
+              docker pull ${{ secrets.DOCKERHUB_USERNAME }}/WeShareUs-blog-API:latest
+              docker stop WeShareUs-blog-API
+              docker rm WeShareUs-blog-API
+              docker run --restart=unless-stopped --add-host=host.docker.internal:host-gateway -d -p 8080:8080 --name weshareus-back ${{ secrets.DOCKERHUB_USERNAME }}/WeShareUs-blog-API:latest
               docker rmi $(docker images -f "dangling=true" -q)
