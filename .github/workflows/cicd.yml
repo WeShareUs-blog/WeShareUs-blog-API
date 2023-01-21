@@ -24,9 +24,9 @@ jobs:
       - run: npm test
 
   CD:
+    needs: CI
     if: ${{ github.ref == 'main'}}
     runs-on: ubuntu-18.04
-    need: CI
     steps:
       - name: checkout branch
         uses: actions/checkout@v3
