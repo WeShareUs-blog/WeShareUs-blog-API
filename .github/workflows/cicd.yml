@@ -41,13 +41,13 @@ jobs:
           MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }} \
           MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD}}  \
           MYSQL_PORT=${{ secrets.MYSQL_PORT}} \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/WeShareUs-blog-API:latest .
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest .
 
       - name: login docker hub
         run: echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
       - name: push docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/WeShareUs-blog-API:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest
 
       - name: SSH remote and Run Docker container
         uses: appleboy/ssh-action@master
@@ -57,8 +57,8 @@ jobs:
           key: ${{ secrets.SSH_CLIENT_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-              docker pull ${{ secrets.DOCKERHUB_USERNAME }}/WeShareUs-blog-API:latest
-              docker stop WeShareUs-blog-API
-              docker rm WeShareUs-blog-API
-              docker run --restart=unless-stopped --add-host=host.docker.internal:host-gateway -d -p 8080:8080 --name weshareus-back ${{ secrets.DOCKERHUB_USERNAME }}/WeShareUs-blog-API:latest
+              docker pull ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest
+              docker stop weshareus-blog-api
+              docker rm weshareus-blog-api
+              docker run --restart=unless-stopped --add-host=host.docker.internal:host-gateway -d -p 8080:8080 --name weshareus-blog-api ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest
               docker rmi $(docker images -f "dangling=true" -q)
