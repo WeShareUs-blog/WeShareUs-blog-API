@@ -36,11 +36,11 @@ jobs:
 
       - name: build docker image
         run:
-          docker build --build-arg \
-          MYSQL_HOST=${{ secrets.MYSQL_HOST }} \
-          MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }} \
-          MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD}}  \
-          MYSQL_PORT=${{ secrets.MYSQL_PORT}} \
+          docker build --build-arg
+          MYSQL_HOST=${{ secrets.MYSQL_HOST }}
+          MYSQL_USERNAME=${{ secrets.MYSQL_USERNAME }}
+          MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD}}
+          MYSQL_PORT=${{ secrets.MYSQL_PORT}}
           -t ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest .
 
       - name: login docker hub
