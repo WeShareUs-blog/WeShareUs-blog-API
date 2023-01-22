@@ -61,3 +61,4 @@ jobs:
               docker rm weshareus-blog-api
               docker run --restart=unless-stopped --add-host=host.docker.internal:host-gateway -d -p 3000:3000 --name weshareus-blog-api ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest
               docker rmi $(docker images -f "dangling=true" -q)
+
