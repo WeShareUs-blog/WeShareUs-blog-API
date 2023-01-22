@@ -50,7 +50,7 @@
     "build": "tsc",
     "start": "NODE_ENV=production node ./dist/server.js",
     "start:dev": "NODE_ENV=development ts-node-dev --files --respawn -r dotenv/config --transpile-only ./src/server.ts",
-    "test": "jest --runInBand",
+    "test": "NODE_ENV=development jest --runInBand",
     "lint": "eslint ./src/** --ext .js,.ts"
   },
   "repository": {

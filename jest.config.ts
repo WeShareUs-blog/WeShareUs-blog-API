@@ -17,4 +17,5 @@ export default {
   setupFiles: ['dotenv/config'],
   testMatch: null,
   testEnvironment: 'node',
+  restoreMocks: true,
 };

@@ -1,1 +1,1 @@
-export type NODE_ENV_TYPE = 'production' | 'development';
+export type NODE_ENV_TYPE = 'production' | 'development' | 'test';

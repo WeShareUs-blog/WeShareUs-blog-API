@@ -1,7 +1,8 @@
 import { Column, Entity } from 'typeorm';
 import { badRequest } from '@hapi/boom';
 import { Aggregate } from '../../../libs/aggregate';
-import { hashPassword } from '../../../libs/bcryptjs';
+import { comparePassword, hashPassword } from '../../../libs/bcryptjs';
+import { createToken } from '../../../libs/jwt';
 
 export type RoleType = 'general' | 'admin';
 @Entity()
@@ -12,7 +13,7 @@ export class User extends Aggregate {
   @Column()
   account!: string;
 
-  @Column()
+  @Column({ select: false })
   password!: string;
 
   constructor(args: { account: string; password: string; confirmPassword: string }) {
@@ -31,5 +32,13 @@ export class User extends Aggregate {
 
   static Of(args: { account: string; password: string; confirmPassword: string }) {
     return new User(args);
+  }
+
+  isCorrectPassword(plainPassword: string) {
+    return comparePassword(plainPassword, this.password);
+  }
+
+  signAccessToken() {
+    return createToken({ id: this.id, account: this.account });
   }
 }

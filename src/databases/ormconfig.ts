@@ -23,4 +23,15 @@ export const ormconfig: Record<NODE_ENV_TYPE, DataSourceOptions> = {
     synchronize: true,
     logging: false,
   },
+  // NOTE: 테스트를 돌리기위해 넣은 값. 의미없는 값들이다.
+  test: {
+    type: 'mysql',
+    host: 'localhost',
+    username: 'test',
+    password: 'test',
+    port: 3306,
+    database: 'test',
+    synchronize: false,
+    logging: false,
+  },
 };
