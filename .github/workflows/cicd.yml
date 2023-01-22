@@ -59,5 +59,7 @@ jobs:
               docker pull ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest
               docker stop weshareus-blog-api
               docker rm weshareus-blog-api
-              docker run --restart=unless-stopped --add-host=host.docker.internal:host-gateway -d -p 8080:8080 --name weshareus-blog-api ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest
+              docker run --restart=unless-stopped --add-host=host.docker.internal:host-gateway -d -p 3000:3000 --name weshareus-blog-api ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest
               docker rmi $(docker images -f "dangling=true" -q)
+
+          # nginx 도입하면 포트포워딩을 바꾸어야 접속이 가능하다.
