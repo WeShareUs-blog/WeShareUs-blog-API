@@ -10,7 +10,7 @@ export const ormconfig: Record<NODE_ENV_TYPE, DataSourceOptions> = {
     password: process.env.MYSQL_PASSWORD,
     port: Number(process.env.MYSQL_PORT),
     database: 'WeShareUs',
-    synchronize: false,
+    synchronize: true,
     logging: true,
   },
   development: {
