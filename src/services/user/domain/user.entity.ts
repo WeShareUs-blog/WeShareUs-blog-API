@@ -13,7 +13,7 @@ export class User extends Aggregate {
   @Column()
   account!: string;
 
-  @Column({ select: false })
+  @Column()
   password!: string;
 
   constructor(args: { account: string; password: string; confirmPassword: string }) {

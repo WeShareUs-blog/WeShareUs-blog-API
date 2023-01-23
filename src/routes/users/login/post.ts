@@ -1,6 +1,7 @@
 import { Spec, Joi } from 'koa-joi-router';
 import { Container } from 'typedi';
 import { UserService } from '../../../services/user/application/user.service';
+import { hashPassword } from '../../../libs/bcryptjs';
 
 const bodySchema = Joi.object({
   account: Joi.string().required().description('사용자 계정'),
@@ -30,8 +31,8 @@ export default {
 
     // 3. Get service result
     const data = await userService.login({ account, password });
-    // 4. Send response
 
+    // 4. Send response
     ctx.body = { data };
   },
 } as Spec;

@@ -8,7 +8,7 @@ import {
 
 @Entity()
 export abstract class Aggregate {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @CreateDateColumn({ select: false })
