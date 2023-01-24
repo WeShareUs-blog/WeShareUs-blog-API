@@ -6,15 +6,19 @@ import * as helmet from 'koa-helmet';
 import 'dotenv/config';
 import { connectMysql } from './databases';
 import { globalRouter } from './routes';
+import { errorHandler } from './middlewares/error-handler';
 
 class App {
   private app;
 
   constructor() {
+    connectMysql().then(() => {
+      console.log('connecting mysql!');
+    });
     this.app = new Koa();
-    connectMysql();
+    this.app.use(errorHandler);
     this.app.use(helmet());
-    this.app.use(koaCors({ origin: '*' }));
+    this.app.use(koaCors({ origin: 'http://localhost:3000' }));
     this.app.use(koaBody({ multipart: true }));
     this.app.use(koaLogger());
     this.app.use(globalRouter.middleware());
