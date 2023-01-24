@@ -6,13 +6,6 @@ import entities from './entities';
 const env = process.env.NODE_ENV as NODE_ENV_TYPE;
 export const datasource = new DataSource({ ...ormconfig[env], entities });
 
-export function connectMysql() {
-  datasource
-    .initialize()
-    .then(() => {
-      console.log('connect mysql..!');
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+export async function connectMysql() {
+  await datasource.initialize();
 }
