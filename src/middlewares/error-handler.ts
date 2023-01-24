@@ -13,12 +13,11 @@ export const errorHandler = async (ctx: Context, next: () => Promise<any>) => {
     };
     if (err instanceof Boom) {
       customError.statusCode = err.output.statusCode;
-      customError.clientErrorMessage = err.message;
+      customError.clientErrorMessage = err.data.errorMessage;
       customError.developerErrorMessage = err.output.payload.message;
       customError.error = err.output.payload.error;
     }
 
-    console.log(customError.developerErrorMessage);
     ctx.status = customError.statusCode;
     ctx.body = {
       data: {
