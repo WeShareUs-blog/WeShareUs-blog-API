@@ -8,6 +8,7 @@ import { connectMysql } from './databases';
 import { globalRouter } from './routes';
 import { errorHandler } from './middlewares/error-handler';
 
+const isDev = process.env.NODE_ENV !== 'production';
 class App {
   private app;
 
@@ -18,7 +19,9 @@ class App {
     this.app = new Koa();
     this.app.use(errorHandler);
     this.app.use(helmet());
-    this.app.use(koaCors({ origin: 'http://localhost:3000' }));
+    this.app.use(
+      koaCors({ origin: isDev ? 'http://localhost:3000' : 'https://weshareus-blog.com' })
+    );
     this.app.use(koaBody({ multipart: true }));
     this.app.use(koaLogger());
     this.app.use(globalRouter.middleware());
