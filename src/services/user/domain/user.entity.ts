@@ -39,6 +39,6 @@ export class User extends Aggregate {
   }
 
   signAccessToken() {
-    return createToken({ id: this.id, account: this.account });
+    return createToken({ id: this.id, account: this.account, role: this.role });
   }
 }
