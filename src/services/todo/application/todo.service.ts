@@ -1,6 +1,6 @@
 import { Inject, Service } from 'typedi';
 import { forbidden } from '@hapi/boom';
-import { PublishedDate } from '../../../type';
+import { PublishedDate } from '../../../types';
 import { User } from '../../user/domain/user.entity';
 import { Todo } from '../domain/todo.entity';
 import { TodoRepository } from '../infrastructure/todo.repository';
@@ -9,6 +9,15 @@ import { TodoRepository } from '../infrastructure/todo.repository';
 export class TodoService {
   @Inject()
   private readonly todoRepository!: TodoRepository;
+
+  /**
+   *
+   * @param publishedDate - 조회하는 날짜
+   * @description todo 목록 조회
+   */
+  async list({ publishedDate }: { publishedDate?: PublishedDate }) {
+    return this.todoRepository.find({ publishedDate });
+  }
 
   /**
    *

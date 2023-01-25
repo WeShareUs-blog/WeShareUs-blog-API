@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { ormconfig } from './ormconfig';
-import { NODE_ENV_TYPE } from '../type';
+import { NODE_ENV_TYPE } from '../types';
 import entities from './entities';
 
 const env = process.env.NODE_ENV as NODE_ENV_TYPE;

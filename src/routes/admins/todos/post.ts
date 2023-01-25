@@ -1,7 +1,7 @@
 import { Spec, Joi } from 'koa-joi-router';
 import { Container } from 'typedi';
 import { TodoService } from '../../../services/todo/application/todo.service';
-import { PublishedDate } from '../../../type';
+import { PublishedDate } from '../../../types';
 import { RoleType, User } from '../../../services/user/domain/user.entity';
 
 const bodySchema = Joi.object({

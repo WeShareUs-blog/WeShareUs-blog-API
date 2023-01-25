@@ -1,11 +1,11 @@
 import { Column, Entity } from 'typeorm';
 import { Aggregate } from '../../../libs/aggregate';
+import { PublishedDate } from '../../../types';
 
-export type PublishedDate = string;
 @Entity()
 export class Todo extends Aggregate {
   @Column()
-  publishedDate!: PublishedDate;
+  publishedDate!: string;
 
   @Column()
   done!: boolean;
