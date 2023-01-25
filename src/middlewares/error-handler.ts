@@ -20,9 +20,7 @@ export const errorHandler = async (ctx: Context, next: () => Promise<any>) => {
 
     ctx.status = customError.statusCode;
     ctx.body = {
-      data: {
-        errorMessage: customError.clientErrorMessage || 'The server has an unexpected error.',
-      },
+      errorMessage: customError.clientErrorMessage || 'The server has an unexpected error.',
     };
   }
 };
