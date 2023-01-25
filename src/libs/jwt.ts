@@ -1,5 +1,7 @@
 import { sign } from 'jsonwebtoken';
 
+export const JWT_SECRET_KEY = 'development-secret-key';
+
 export function createToken(data: any) {
-  return sign(data, String(process.env.JWT_SECRET_TOKEN));
+  return sign(data, JWT_SECRET_KEY);
 }
