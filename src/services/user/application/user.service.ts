@@ -1,12 +1,39 @@
 import { Inject, Service } from 'typedi';
 import { badRequest } from '@hapi/boom';
 import { UserRepository } from '../infrastructure/user.repository';
+import { User } from '../domain/user.entity';
 
 @Service()
 export class UserService {
   @Inject()
   private readonly userRepository!: UserRepository;
 
+  async register({
+    account,
+    password,
+    confirmPassword,
+  }: {
+    account: string;
+    password: string;
+    confirmPassword: string;
+  }) {
+    const user = await this.userRepository.findOne({ account });
+
+    if (user) {
+      throw badRequest(`${account} already exists.`, {
+        errorMessage: `${account} already exists.`,
+      });
+    }
+
+    const newUser = User.Of({ account, password, confirmPassword });
+    await this.userRepository.save(newUser);
+  }
+
+  /**
+   *
+   * @param account
+   * @param password
+   */
   async login({ account, password }: { account: string; password: string }) {
     const user = await this.userRepository.findOne({ account });
 

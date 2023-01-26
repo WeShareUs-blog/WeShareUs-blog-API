@@ -9,7 +9,11 @@ export class UserRepository extends Repository<User> {
     super(User);
   }
 
-  findOne(args: { id?: string; account?: string; role?: RoleType }) {
+  async save(user: User) {
+    return this.getManager().save(user);
+  }
+
+  async findOne(args: { id?: string; account?: string; role?: RoleType }) {
     return this.getManager().findOne({ where: strip(args) });
   }
 }

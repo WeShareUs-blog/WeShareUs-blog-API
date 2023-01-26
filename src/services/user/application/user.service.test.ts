@@ -1,4 +1,5 @@
 import { plainToInstance } from 'class-transformer';
+import { badRequest } from '@hapi/boom';
 import { UserService } from './user.service';
 import { UserRepository } from '../infrastructure/user.repository';
 import { User } from '../domain/user.entity';
@@ -10,6 +11,38 @@ describe('UserService 테스트', () => {
   const userRepository = jest.mocked(new UserRepository());
 
   Object.assign(userService, { userRepository });
+
+  describe('register() 메소드 테스트', () => {
+    it('이미 존재하는 account면 에러를 발생시킨다.', async () => {
+      userRepository.findOne.mockResolvedValue(
+        plainToInstance(User, {
+          id: 'user-uuid',
+          account: 'account',
+          password: 'hashedPassword',
+        })
+      );
+
+      expect.assertions(1);
+      await expect(() =>
+        userService.register({ account: 'account', password: '1234', confirmPassword: '1234' })
+      ).rejects.toThrow(badRequest('account already exists.'));
+    });
+
+    it('정상적으로 save를 호출한다.', async () => {
+      userRepository.findOne.mockResolvedValue(null);
+      userRepository.save.mockResolvedValue(
+        plainToInstance(User, {
+          id: 'user-uuid',
+          account: 'account',
+          password: 'hashedPassword',
+        })
+      );
+
+      await userService.register({ account: 'account', password: '1234', confirmPassword: '1234' });
+      expect(userRepository.save).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('login() 메소드 테스트', () => {
     it('정상적으로 token을 발급한다.', async () => {
       const user = plainToInstance(User, {
