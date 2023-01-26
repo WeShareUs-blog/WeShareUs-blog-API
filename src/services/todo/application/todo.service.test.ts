@@ -13,8 +13,42 @@ describe('TodoService 테스트', () => {
 
   Object.assign(todoService, { todoRepository });
 
+  describe('list() 메소드 테스트', () => {
+    it('정상적으로 todo list를 반환한다.', async () => {
+      todoRepository.find.mockResolvedValue([
+        plainToInstance(Todo, {
+          id: 'todo-uuid-1',
+          publishedDate: '2023-01-01',
+          done: false,
+          content: 'todo 내용',
+        }),
+        plainToInstance(Todo, {
+          id: 'todo-uuid-2',
+          publishedDate: '2023-01-01',
+          done: false,
+          content: 'todo 내용-2',
+        }),
+      ]);
+
+      expect(await todoService.list({ publishedDate: '2023-01-01' })).toEqual([
+        {
+          id: 'todo-uuid-1',
+          publishedDate: '2023-01-01',
+          done: false,
+          content: 'todo 내용',
+        },
+        {
+          id: 'todo-uuid-2',
+          publishedDate: '2023-01-01',
+          done: false,
+          content: 'todo 내용-2',
+        },
+      ]);
+    });
+  });
+
   describe('add() 메소드 테스트', () => {
-    it('정상적으 save를 호출한다', async () => {
+    it('정상적으 save를 호출한다.', async () => {
       todoRepository.save.mockResolvedValue(plainToInstance(Todo, {}));
       await todoService.add(
         {

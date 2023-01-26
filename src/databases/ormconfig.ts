@@ -1,6 +1,6 @@
 import { DataSourceOptions } from 'typeorm';
 import * as process from 'process';
-import { NODE_ENV_TYPE } from '../type';
+import { NODE_ENV_TYPE } from '../types';
 
 export const ormconfig: Record<NODE_ENV_TYPE, DataSourceOptions> = {
   production: {
