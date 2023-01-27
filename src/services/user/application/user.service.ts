@@ -8,6 +8,12 @@ export class UserService {
   @Inject()
   private readonly userRepository!: UserRepository;
 
+  /**
+   *
+   * @param account
+   * @param password
+   * @param confirmPassword
+   */
   async register({
     account,
     password,

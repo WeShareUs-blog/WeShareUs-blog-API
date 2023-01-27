@@ -1,51 +1,26 @@
 import { Inject, Service } from 'typedi';
-import { forbidden } from '@hapi/boom';
+import { TodoRepository } from '../infrastructure/todo.repository';
 import { PublishedDate } from '../../../types';
 import { User } from '../../user/domain/user.entity';
 import { Todo } from '../domain/todo.entity';
-import { TodoRepository } from '../infrastructure/todo.repository';
 
 @Service()
 export class TodoService {
   @Inject()
   private readonly todoRepository!: TodoRepository;
 
+  // NOTE: 없는 경우에는 해당 날짜에 대한 Todo를 생성하자.
   /**
    *
-   * @param publishedDate - 조회하는 날짜
-   * @description todo 목록 조회
+   * @param user - 사용자
+   * @param publishedDate - 조회 날짜
    */
-  async list({ publishedDate }: { publishedDate?: PublishedDate }) {
-    return this.todoRepository.find({ publishedDate });
-  }
+  async retrieve({ user }: { user: User }, { publishedDate }: { publishedDate: PublishedDate }) {
+    const todo = await this.todoRepository.findOne({ publishedDate, userId: user.id });
 
-  /**
-   *
-   * @param user
-   * @param publishedDate - 생성 날짜
-   * @param content - todo 내용
-   * @param done - todo 유무
-   * @description todo 생성 API
-   */
-  async add(
-    { user }: { user: User },
-    {
-      publishedDate,
-      content,
-      done,
-    }: {
-      publishedDate: PublishedDate;
-      content: string;
-      done: boolean;
+    if (!todo) {
+      return this.todoRepository.save(Todo.Of({ publishedDate, userId: user.id }));
     }
-  ) {
-    if (user.role !== 'admin') {
-      throw forbidden(`${user.account} does not have permission to create Todo.`, {
-        errorMessage: `${user.account} does not have permission to create Todo.`,
-      });
-    }
-
-    const todo = Todo.Of({ publishedDate, content, done });
-    await this.todoRepository.save(todo);
+    return todo;
   }
 }
