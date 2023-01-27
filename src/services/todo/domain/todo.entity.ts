@@ -14,7 +14,7 @@ export class Todo extends Aggregate {
     cascade: ['insert', 'update'],
     eager: true,
   })
-  todoItem!: TodoItem[];
+  todoItems!: TodoItem[];
 
   constructor(args: { publishedDate: PublishedDate; userId: string }) {
     super();
@@ -40,6 +40,6 @@ export class TodoItem {
   @Column()
   done!: boolean;
 
-  @ManyToOne(() => Todo, (todo) => todo.todoItem)
+  @ManyToOne(() => Todo, (todo) => todo.todoItems)
   todo!: Todo;
 }
