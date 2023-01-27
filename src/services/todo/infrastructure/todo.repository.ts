@@ -10,12 +10,12 @@ export class TodoRepository extends Repository<Todo> {
     super(Todo);
   }
 
-  async find(args?: { publishedDate?: PublishedDate }) {
-    return this.getManager().find({ where: strip(args) });
+  save(todo: Todo) {
+    return this.getManager().save(todo);
   }
 
-  async save(todo: Todo) {
-    return this.getManager().save(todo);
+  findOne(args: { publishedDate?: PublishedDate; userId?: string }) {
+    return this.getManager().findOne({ where: strip(args) });
   }
 }
 

@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Aggregate } from '../../../libs/aggregate';
 import { PublishedDate } from '../../../types';
 
@@ -8,21 +8,38 @@ export class Todo extends Aggregate {
   publishedDate!: string;
 
   @Column()
-  done!: boolean;
+  userId!: string;
+
+  @OneToMany(() => TodoItem, (todoItem) => todoItem.todo, {
+    cascade: ['insert', 'update'],
+    eager: true,
+  })
+  todoItem!: TodoItem[];
+
+  constructor(args: { publishedDate: PublishedDate; userId: string }) {
+    super();
+    if (args) {
+      this.publishedDate = args.publishedDate;
+      this.userId = args.userId;
+    }
+  }
+
+  static Of(args: { publishedDate: PublishedDate; userId: string }) {
+    return new Todo(args);
+  }
+}
+
+@Entity()
+export class TodoItem {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
   @Column()
   content!: string;
 
-  constructor(args: { publishedDate: PublishedDate; done: boolean; content: string }) {
-    super();
-    if (args) {
-      this.publishedDate = args.publishedDate;
-      this.done = args.done;
-      this.content = args.content;
-    }
-  }
+  @Column()
+  done!: boolean;
 
-  static Of(args: { publishedDate: PublishedDate; done: boolean; content: string }) {
-    return new Todo(args);
-  }
+  @ManyToOne(() => Todo, (todo) => todo.todoItem)
+  todo!: Todo;
 }

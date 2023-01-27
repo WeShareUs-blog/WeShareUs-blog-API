@@ -1,9 +1,8 @@
 import { plainToInstance } from 'class-transformer';
-import { forbidden } from '@hapi/boom';
 import { TodoService } from './todo.service';
 import { TodoRepository } from '../infrastructure/todo.repository';
-import { User } from '../../user/domain/user.entity';
 import { Todo } from '../domain/todo.entity';
+import { User } from '../../user/domain/user.entity';
 
 jest.mock('../infrastructure/todo.repository');
 
@@ -13,82 +12,62 @@ describe('TodoService 테스트', () => {
 
   Object.assign(todoService, { todoRepository });
 
-  describe('list() 메소드 테스트', () => {
-    it('정상적으로 todo list를 반환한다.', async () => {
-      todoRepository.find.mockResolvedValue([
+  describe('retrieve() 메소드 테스트', () => {
+    it('todo가 존재하지 않는다면 save를 호출한다.', async () => {
+      todoRepository.findOne.mockResolvedValue(null);
+      todoRepository.save.mockResolvedValue(
         plainToInstance(Todo, {
-          id: 'todo-uuid-1',
-          publishedDate: '2023-01-01',
-          done: false,
-          content: 'todo 내용',
-        }),
-        plainToInstance(Todo, {
-          id: 'todo-uuid-2',
-          publishedDate: '2023-01-01',
-          done: false,
-          content: 'todo 내용-2',
-        }),
-      ]);
+          id: 'todo-uuid',
+          publishedDate: '2023-01-26',
+          userId: 'userId',
+          todoItems: [],
+        })
+      );
 
-      expect(await todoService.list({ publishedDate: '2023-01-01' })).toEqual([
-        {
-          id: 'todo-uuid-1',
-          publishedDate: '2023-01-01',
-          done: false,
-          content: 'todo 내용',
-        },
-        {
-          id: 'todo-uuid-2',
-          publishedDate: '2023-01-01',
-          done: false,
-          content: 'todo 내용-2',
-        },
-      ]);
-    });
-  });
-
-  describe('add() 메소드 테스트', () => {
-    it('정상적으 save를 호출한다.', async () => {
-      todoRepository.save.mockResolvedValue(plainToInstance(Todo, {}));
-      await todoService.add(
+      await todoService.retrieve(
         {
           user: plainToInstance(User, {
-            id: 'user-uuid',
+            id: 'id',
             account: 'account',
-            role: 'admin',
+            password: '1234',
+            role: 'general',
           }),
         },
-        {
-          publishedDate: '2023-01-25',
-          content: 'content',
-          done: false,
-        }
+        { publishedDate: '2023-01-26' }
       );
       expect(todoRepository.save).toHaveBeenCalledTimes(1);
-      expect(todoRepository.save.mock.calls[0][0]).toEqual({
-        content: 'content',
-        done: false,
-        publishedDate: '2023-01-25',
-      });
     });
-    it('role !== admin이면 에러를 던진다.', () => {
-      expect.assertions(1);
-      expect(() =>
-        todoService.add(
+
+    it('todo가 존재한다면 정상적으로 반환한다.', async () => {
+      todoRepository.findOne.mockResolvedValue(
+        plainToInstance(Todo, {
+          id: 'todo-uuid',
+          publishedDate: '2023-01-26',
+          userId: 'userId',
+          todoItems: [],
+        })
+      );
+
+      expect(
+        await todoService.retrieve(
           {
             user: plainToInstance(User, {
-              id: 'user-uuid',
+              id: 'id',
               account: 'account',
+              password: '1234',
               role: 'general',
             }),
           },
           {
-            publishedDate: '2023-01-25',
-            content: 'content',
-            done: false,
+            publishedDate: '2023-01-26',
           }
         )
-      ).rejects.toThrowError(forbidden('account does not have permission to create Todo.'));
+      ).toEqual({
+        id: 'todo-uuid',
+        publishedDate: '2023-01-26',
+        userId: 'userId',
+        todoItems: [],
+      });
     });
   });
 });

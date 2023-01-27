@@ -1,4 +1,4 @@
 import { User } from '../services/user/domain/user.entity';
-import { Todo } from '../services/todo/domain/todo.entity';
+import { Todo, TodoItem } from '../services/todo/domain/todo.entity';
 
-export default [User, Todo];
+export default [User, Todo, TodoItem];
