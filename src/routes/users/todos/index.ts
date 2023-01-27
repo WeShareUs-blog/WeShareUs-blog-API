@@ -1,3 +1,3 @@
 import get from './get';
 
-export const TodosRoutes = [get];
+export const todosRoutes = [get];
