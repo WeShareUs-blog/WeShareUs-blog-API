@@ -11,6 +11,7 @@ export const errorHandler = async (ctx: Context, next: () => Promise<any>) => {
       developerErrorMessage: '',
       clientErrorMessage: '',
     };
+    console.log(err);
     if (err instanceof Boom) {
       customError.statusCode = err.output.statusCode;
       customError.clientErrorMessage = err.data.errorMessage;

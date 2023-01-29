@@ -14,7 +14,7 @@ export class TodoRepository extends Repository<Todo> {
     return this.getManager().save(todo);
   }
 
-  findOne(args: { publishedDate?: PublishedDate; userId?: string }) {
+  findOne(args: { id?: string; publishedDate?: PublishedDate; userId?: string }) {
     return this.getManager().findOne({ where: strip(args) });
   }
 }
