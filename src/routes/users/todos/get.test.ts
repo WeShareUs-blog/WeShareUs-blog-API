@@ -22,13 +22,11 @@ describe('GET /users/todos', () => {
           id: 1,
           content: 'content-1',
           done: false,
-          todoId: 'todo-uuid',
         },
         {
           id: 2,
           content: 'content-2',
           done: false,
-          todoId: 'todo-uuid-2',
         },
       ],
     });

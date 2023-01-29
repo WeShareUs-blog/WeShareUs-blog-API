@@ -27,6 +27,10 @@ export class Todo extends Aggregate {
   static Of(args: { publishedDate: PublishedDate; userId: string }) {
     return new Todo(args);
   }
+
+  async update(args: any) {
+    Object.assign(this, args);
+  }
 }
 
 @Entity()

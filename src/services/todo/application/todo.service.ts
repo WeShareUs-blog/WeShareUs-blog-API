@@ -1,8 +1,9 @@
 import { Inject, Service } from 'typedi';
+import { badRequest } from '@hapi/boom';
 import { TodoRepository } from '../infrastructure/todo.repository';
 import { PublishedDate } from '../../../types';
 import { User } from '../../user/domain/user.entity';
-import { Todo } from '../domain/todo.entity';
+import { Todo, TodoItem } from '../domain/todo.entity';
 
 @Service()
 export class TodoService {
@@ -22,5 +23,26 @@ export class TodoService {
       return this.todoRepository.save(Todo.Of({ publishedDate, userId: user.id }));
     }
     return todo;
+  }
+
+  /**
+   *
+   * @param user - 사용자 계정
+   * @param id - todo uuid
+   * @param todoItems - todo 항목들
+   * @description todo 목록 수정 API
+   */
+  async edit({ user }: { user: User }, { id, todoItems }: { id: string; todoItems: TodoItem[] }) {
+    const todo = await this.todoRepository.findOne({ id, userId: user.id });
+
+    if (!todo) {
+      throw badRequest('This todo does not exist.', { errorMessage: 'This todo does not exist.' });
+    }
+    const updateProps = {
+      todoItems,
+    };
+
+    await todo.update(updateProps);
+    await this.todoRepository.save(todo);
   }
 }

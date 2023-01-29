@@ -15,7 +15,6 @@ const outputSchema = Joi.object({
     id: Joi.number().required(),
     content: Joi.string().required(),
     done: Joi.boolean().required(),
-    todoId: Joi.string().required(),
   }),
 }).required();
 export default {
