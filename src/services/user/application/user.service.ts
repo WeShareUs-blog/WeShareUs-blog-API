@@ -56,4 +56,14 @@ export class UserService {
     }
     return { token: user.signAccessToken() };
   }
+
+  async checkDuplicatedAccount({ account }: { account: string }) {
+    const user = await this.userRepository.findOne({ account });
+
+    if (user) {
+      throw badRequest(`${account} already exists.`, {
+        errorMessage: `${account} already exists.`,
+      });
+    }
+  }
 }

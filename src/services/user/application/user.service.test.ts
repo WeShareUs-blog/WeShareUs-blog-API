@@ -60,4 +60,29 @@ describe('UserService 테스트', () => {
       });
     });
   });
+
+  describe('checkDuplicatedAccount() 메소드 테스트', () => {
+    it('account가 중복되지 않았으면 에러를 발생시키지 않는다.', async () => {
+      userRepository.findOne.mockResolvedValue(null);
+
+      await expect(() =>
+        userService.checkDuplicatedAccount({ account: 'account' })
+      ).not.toThrowError();
+    });
+
+    it('account로 등록된 유저가 존재하면 에러를 던진다.', async () => {
+      userRepository.findOne.mockResolvedValue(
+        plainToInstance(User, {
+          id: 'user-uuid',
+          account: 'account',
+          password: 'hashedPassword',
+        })
+      );
+
+      expect.assertions(1);
+      await expect(() =>
+        userService.checkDuplicatedAccount({ account: 'account' })
+      ).rejects.toThrow(badRequest('account already exists.'));
+    });
+  });
 });
