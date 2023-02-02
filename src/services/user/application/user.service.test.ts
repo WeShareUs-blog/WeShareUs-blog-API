@@ -57,6 +57,7 @@ describe('UserService 테스트', () => {
 
       expect(await userService.login({ account: 'account', password: '1234' })).toEqual({
         token: 'token',
+        account: 'account',
       });
     });
   });

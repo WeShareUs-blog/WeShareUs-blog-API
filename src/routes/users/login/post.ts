@@ -1,7 +1,6 @@
 import { Spec, Joi } from 'koa-joi-router';
 import { Container } from 'typedi';
 import { UserService } from '../../../services/user/application/user.service';
-import { hashPassword } from '../../../libs/bcryptjs';
 
 const bodySchema = Joi.object({
   account: Joi.string().required().description('사용자 계정'),
@@ -9,6 +8,7 @@ const bodySchema = Joi.object({
 }).required();
 const outputSchema = Joi.object({
   token: Joi.string().required().description('사용자 토큰'),
+  account: Joi.string().required().description('사용자 account'),
 });
 export default {
   path: '/login',
