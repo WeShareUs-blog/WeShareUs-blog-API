@@ -20,7 +20,13 @@ export class TodoService {
     const todo = await this.todoRepository.findOne({ publishedDate, userId: user.id });
 
     if (!todo) {
-      return this.todoRepository.save(Todo.Of({ publishedDate, userId: user.id }));
+      const newTodo = await this.todoRepository.save(Todo.Of({ publishedDate, userId: user.id }));
+      return {
+        id: newTodo.id,
+        userId: newTodo.userId,
+        publishedDate: newTodo.publishedDate,
+        todoItems: [],
+      };
     }
     return todo;
   }
@@ -39,7 +45,9 @@ export class TodoService {
       throw badRequest('This todo does not exist.', { errorMessage: 'This todo does not exist.' });
     }
     const updateProps = {
-      todoItems,
+      todoItems: todoItems.map((todoItem) => {
+        return { content: todoItem.content, done: todoItem.done };
+      }),
     };
 
     await todo.update(updateProps);

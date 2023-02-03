@@ -8,7 +8,7 @@ const bodySchema = Joi.object({
   id: Joi.string().required(),
   todoItems: Joi.array()
     .items({
-      id: Joi.number().optional(),
+      id: Joi.any().optional(),
       content: Joi.string().required(),
       done: Joi.boolean().required(),
     })
