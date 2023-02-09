@@ -56,7 +56,7 @@ export class UserService {
         errorMessage: '아이디 또는 비밀번호가 틀렸습니다.',
       });
     }
-    return { token: user.signAccessToken(), account };
+    return { token: user.signAccessToken(), nickname: user.nickname };
   }
 
   async checkDuplicatedAccount({ account }: { account: string }) {
