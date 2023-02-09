@@ -18,13 +18,19 @@ describe('UserService 테스트', () => {
         plainToInstance(User, {
           id: 'user-uuid',
           account: 'account',
+          nickname: 'nickname',
           password: 'hashedPassword',
         })
       );
 
       expect.assertions(1);
       await expect(() =>
-        userService.register({ account: 'account', password: '1234', confirmPassword: '1234' })
+        userService.register({
+          account: 'account',
+          nickname: 'nickname',
+          password: '1234',
+          confirmPassword: '1234',
+        })
       ).rejects.toThrow(badRequest('account already exists.'));
     });
 
@@ -34,11 +40,17 @@ describe('UserService 테스트', () => {
         plainToInstance(User, {
           id: 'user-uuid',
           account: 'account',
+          nickname: 'nickname',
           password: 'hashedPassword',
         })
       );
 
-      await userService.register({ account: 'account', password: '1234', confirmPassword: '1234' });
+      await userService.register({
+        account: 'account',
+        nickname: 'nickname',
+        password: '1234',
+        confirmPassword: '1234',
+      });
       expect(userRepository.save).toHaveBeenCalledTimes(1);
     });
   });

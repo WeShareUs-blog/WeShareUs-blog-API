@@ -16,10 +16,12 @@ export class UserService {
    */
   async register({
     account,
+    nickname,
     password,
     confirmPassword,
   }: {
     account: string;
+    nickname: string;
     password: string;
     confirmPassword: string;
   }) {
@@ -31,7 +33,7 @@ export class UserService {
       });
     }
 
-    const newUser = User.Of({ account, password, confirmPassword });
+    const newUser = User.Of({ account, nickname, password, confirmPassword });
     await this.userRepository.save(newUser);
   }
 

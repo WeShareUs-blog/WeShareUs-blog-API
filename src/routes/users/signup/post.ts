@@ -4,6 +4,7 @@ import { UserService } from '../../../services/user/application/user.service';
 
 const bodySchema = Joi.object({
   account: Joi.string().min(3).required().description('계정이름'),
+  nickname: Joi.string().required().description('사용자 닉네임'),
   password: Joi.string().min(8).required().description('비밀번호'),
   confirmPassword: Joi.string().min(8).required().description('재확인 비밀번호'),
 }).required();
@@ -23,10 +24,12 @@ export default {
     // 1. Get body, params, querystring
     const {
       account,
+      nickname,
       password,
       confirmPassword,
     }: {
       account: string;
+      nickname: string;
       password: string;
       confirmPassword: string;
     } = ctx.request.body;
@@ -35,7 +38,7 @@ export default {
     const userService = Container.get(UserService);
 
     // 3. Get service result
-    await userService.register({ account, password, confirmPassword });
+    await userService.register({ account, nickname, password, confirmPassword });
 
     // 4. Send response
     ctx.status = 201;
