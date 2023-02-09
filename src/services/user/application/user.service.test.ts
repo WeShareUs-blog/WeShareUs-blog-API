@@ -60,6 +60,7 @@ describe('UserService 테스트', () => {
       const user = plainToInstance(User, {
         id: 'user-uuid',
         account: 'account',
+        nickname: 'nickname',
         password: '1234',
       });
 
@@ -69,7 +70,7 @@ describe('UserService 테스트', () => {
 
       expect(await userService.login({ account: 'account', password: '1234' })).toEqual({
         token: 'token',
-        account: 'account',
+        nickname: 'nickname',
       });
     });
   });
@@ -88,6 +89,7 @@ describe('UserService 테스트', () => {
         plainToInstance(User, {
           id: 'user-uuid',
           account: 'account',
+          nickname: 'nickname',
           password: 'hashedPassword',
         })
       );

@@ -42,8 +42,8 @@ export class KakaoLoginService {
       const newUser = await this.userRepository.save(
         User.Of({ account: email, nickname, password: `${email}${randomNumber}` })
       );
-      return { token: newUser.signAccessToken(), account: email };
+      return { token: newUser.signAccessToken(), nickname: newUser.nickname };
     }
-    return { token: user.signAccessToken(), account: email };
+    return { token: user.signAccessToken(), nickname: user.nickname };
   }
 }
