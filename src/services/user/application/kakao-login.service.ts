@@ -1,6 +1,8 @@
 import { Inject, Service } from 'typedi';
 import axios from 'axios';
 import { UserRepository } from '../infrastructure/user.repository';
+import { decodedToken } from '../../../libs/jwt';
+import { User } from '../domain/user.entity';
 
 type KakaoAuthResponseTypes = {
   access_token: string;
@@ -30,7 +32,18 @@ export class KakaoLoginService {
         },
       }
     );
-    console.log(kakaoAuthResponse.data.access_token);
-    return this;
+    const { nickname, email } = decodedToken<{ nickname: string; email: string }>(
+      kakaoAuthResponse.data.id_token
+    );
+
+    const user = await this.userRepository.findOne({ account: email });
+    if (!user) {
+      const randomNumber = Math.floor(Math.random() * 10000);
+      const newUser = await this.userRepository.save(
+        User.Of({ account: email, nickname, password: `${email}${randomNumber}` })
+      );
+      return { token: newUser.signAccessToken(), account: email };
+    }
+    return { token: user.signAccessToken(), account: email };
   }
 }

@@ -4,11 +4,11 @@ import { KakaoLoginService } from '../../../../services/user/application/kakao-l
 
 export default {
   path: '/login/kakao',
-  method: 'GET',
+  method: 'POST',
   validate: {},
   handler: async (ctx) => {
     // 1. Get body, params, querystring
-    const { code } = ctx.request.query as { code: string };
+    const { code }: { code: string } = ctx.request.body;
 
     // 2. Get container service
     const kakaoLoginService = Container.get(KakaoLoginService);
@@ -17,6 +17,6 @@ export default {
     const data = await kakaoLoginService.login({ code });
 
     // 4. Send response
-    ctx.body = {};
+    ctx.body = { data };
   },
 } as Spec;
