@@ -41,6 +41,7 @@ jobs:
           --build-arg MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD}}
           --build-arg MYSQL_PORT=${{ secrets.MYSQL_PORT}}
           --build-arg JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+          --build-arg KAKAO_REST_API_KEY=${{ secrets.KAKAO_REST_API_KEY }}
           -t ${{ secrets.DOCKERHUB_USERNAME }}/weshareus-blog-api:latest .
 
       - name: login docker hub

@@ -6,6 +6,7 @@ describe('POST /users/signup', () => {
     const body = Spec.validate?.body as Joi.AnySchema;
     const { error } = body.validate({
       account: 'account',
+      nickname: 'nickname',
       password: '비밀번호486!',
       confirmPassword: '비밀번호486!',
     });
