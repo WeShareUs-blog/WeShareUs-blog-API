@@ -8,7 +8,7 @@ const bodySchema = Joi.object({
 }).required();
 const outputSchema = Joi.object({
   token: Joi.string().required().description('사용자 토큰'),
-  account: Joi.string().required().description('사용자 account'),
+  nickname: Joi.string().required().description('사용자 account'),
 });
 export default {
   path: '/login',
