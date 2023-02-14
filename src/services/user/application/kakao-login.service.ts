@@ -18,6 +18,10 @@ export class KakaoLoginService {
   @Inject()
   private readonly userRepository!: UserRepository;
 
+  /**
+   *
+   * @param code
+   */
   async login({ code }: { code: string }) {
     const kakaoAuthResponse = await axios.post<KakaoAuthResponseTypes>(
       'https://kauth.kakao.com/oauth/token',
